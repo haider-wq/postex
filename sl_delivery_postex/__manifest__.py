@@ -15,5 +15,7 @@
     "data": [
         "data/delivery_postex.xml",
         "views/delivery_courier.xml",
-    ]
+    ],
+    'installable': True,
+    'application': True,
 }
