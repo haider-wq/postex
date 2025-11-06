@@ -15,13 +15,5 @@
     "data": [
         "data/delivery_postex.xml",
         "views/delivery_courier.xml",
-    ],
-    'assets': {
-        'web.assets_backend': [
-        ]
-    },
-    'images': ['static/description/banner.gif'],
-    'currency': 'USD',
-    'price': 10.00,
-    "installable": True,
+    ]
 }
