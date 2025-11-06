@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_custom_partner" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="contact_code" placeholder="e.g BEO4123456" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="babylon_res_partner_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="contact_code" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="babylon_partner_kanban_view">
+        <field name="name">res.partner.kanban.babylon.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="contact_code"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_kanban_details')]/div/ul" position="inside">
+                <li t-if="record.contact_code and record.contact_code.raw_value">
+                    <field name="contact_code"/>
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_babylon_search_code_form" model="ir.ui.view">
+        <field name="name">view.search.code.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="contact_code" filter_domain="[('contact_code', 'ilike', self)]"/>
+                <filter string="Contact Code" name="contact_code" domain="[('contact_code', '!=','')]"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+</odoo>
+

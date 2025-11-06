@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="product_template_inherit_form" model="ir.ui.view">
+			<field name="name">product.template.inherit</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_only_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='default_code']" position="after">
+					<field name="box_size" string="Box Size"/>
+					<field name="box" string="Box"/>
+					<field name="net_weight" class="oe_inline"/>
+					<field name="fill_weight" string="Fill weight (grams)"/>
+					<field name="form_factor" string="Form factor"/>
+					<field name="status_tag" string="Status Tag"/>
+					<field name="product_formula_id" string="Product Formula"/>
+				</xpath>
+				<xpath expr="//notebook[last()]" position="inside">
+					<page string="Product Images" name="product_images">
+
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-12">
+									<group>
+										<field name="product_ups_image" string="Product UPC Image" widget='image' class="oe_avatar" />
+									</group>
+									<group>
+										<field name="case_pack_ups_image" string="Casepack UPC Image" widget='image' class="oe_avatar" />
+									</group>
+									<group>
+										<field name="product_label_image" string="Product Label Image" widget='image' class="oe_avatar" />
+										<field name="is_finished_goods" invisible="1"/>
+
+									</group>
+									<group>
+										<field name="outerbox_image" string="Outerbox Image" widget='image' class="oe_avatar" />
+									</group>
+
+								</div>
+							</div>
+						</div>
+
+
+					</page>
+
+					<page string="Components List" invisible="not is_finished_goods" name="product_components">
+						<field name="product_component_line_ids" >
+							<list editable="bottom">
+								<field name="product_id" domain="[('is_component','=',True)]" string="Components List"/>
+								<field name="product_qty"/>
+								<field name="uom_id" />
+							</list>
+						</field>
+
+					</page>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="stock.product_template_action_product" model="ir.actions.act_window">
+			<field name="domain">[('is_ingredient','=',False),('is_component','=',False),('is_finished_goods','=',False)]</field>
+		</record>
+
+		<record id="stock.stock_product_normal_action" model="ir.actions.act_window">
+			<field name="domain">[('is_ingredient','=',False),('is_component','=',False)]</field>
+		</record>
+
+<!--		<record id="product_ingredients_search_view" model="ir.ui.view">-->
+<!--			<field name="name">product.template.search</field>-->
+<!--			<field name="model">product.template</field>-->
+<!--			<field name="inherit_id" ref="product.product_template_search_view" />-->
+<!--			<field name="arch" type="xml">-->
+<!--				<xpath expr="//search/filter[@name='filter_to_sell']" position="after">-->
+<!--					<filter string="Ingredients" name="is_ingredient"  domain="[('is_ingredient','=',True)]"/>-->
+<!--				</xpath>-->
+<!--			</field>-->
+<!--		</record>-->
+
+
+
+
+		<!--		<menuitem id="menu_product_pack_main" name="Product Pack" parent="sale.product_menu_catalog" sequence="15" action="action_pack"/>-->
+	</data>
+</odoo>
+

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+
+
+    <template id="report_lot_label_custom" inherit_id="stock.report_lot_label">
+        <xpath expr="//t" position="replace">
+            <t t-call="web.basic_layout">
+                <t t-set="nRows" t-value="12"/>
+                <t t-set="nCols" t-value="4"/>
+                <div class="oe_structure"/>
+                <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
+                    <table class="my-0 table table-sm table-borderless">
+                        <t t-foreach="range(nRows)" t-as="row">
+                            <tr>
+                                <t t-foreach="range(nCols)" t-as="col">
+                                    <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                    <t t-if="barcode_index &lt; len(page_docs)">
+                                        <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="o" t-value="page_docs[0]"/>
+                                    </t>
+                                    <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                                        <div t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (o.env.user.company_id.primary_color or 'black')">
+                                            <t t-set="final_barcode" t-value="''"/>
+                                            <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                                                <t t-if="o.product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(o.product_id.barcode)) + o.product_id.barcode"/>
+                                                <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'" t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
+                                                <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + o.name"/>
+                                            </t>
+                                            <div t-if="o.product_id.default_code" class="o_label_4x12" t-att-style="'width:22mm' if final_barcode else ''">
+                                                <span class="o_label_4x12 lh-1">[<t t-out="o.product_id.default_code"/>]</span>
+                                            </div>
+                                            <div class="o_label_4x12" t-att-style="'width:22mm' if final_barcode else ''">
+                                                <span class="o_label_4x12 lh-1" t-field="o.product_id.name">Demo Product</span>
+                                            </div>
+                                            <div class="o_label_4x12" t-att-style="'width:22mm' if vmc_code else ''">
+                                                <span class="o_label_4x12 lh-1" t-field="o.vmc_code">Demo Code</span>
+                                            </div>
+                                            <div class="o_label_4x12" name="lot_name" t-att-style="'width:22mm; ' if final_barcode else ''">
+                                                <span class="o_label_4x12 lh-1" name="lot_name" t-field="o.name">Demo Name</span>
+                                            </div>
+                                            <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                                                <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'">
+                                                    <span t-out="final_barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'img_style': 'width:17mm; height:17mm'}">12345678901</span>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:35%'}">Customizable Desk</span>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="report_generic_barcode_custom" inherit_id="stock.report_generic_barcode">
+        <xpath expr="//t" position="replace">
+            <t t-call="web.basic_layout">
+                <t t-call="web.html_container">
+                    <div class="oe_structure"/>
+                    <t t-set="nRows" t-value="3"/>
+                    <t t-set="nCols" t-value="1"/>
+                    <t t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs">
+                        <t t-if="page_docs.location_tag_ids">
+                            <div  class="o_label_sheet" style="padding: 10mm 3mm;">
+                                <table class="my-0 table table-sm table-borderless">
+                                    <t t-foreach="range(nRows)" t-as="row">
+                                        <tr>
+                                            <t t-foreach="range(nCols)" t-as="col">
+                                                <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                                <t t-if="barcode_index &lt; len(page_docs)">
+                                                    <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                                    <t t-if="o.location_tag_ids">
+                                                        <td style="width: 100%; padding:1mm;"> <!-- Full width for one item -->
+                                                            <div class="o_label_full" style="width:100%; height:80mm; border: 1px solid black; padding: 0.5mm;">
+                                                                <div class="o_label_name text-center">
+                                                                    <strong><span t-field="o.name">WH/Stock</span></strong>
+                                                                </div>
+                                                                <div class="text-center mt-3">
+                                                                    <span t-if="o.barcode" t-field="o.barcode" style="padding:0" t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:140mm;height:40mm'}">
+                                                                        1234567890
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </t>
+
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+                <div class="oe_structure"/>
+            </t>
+
+
+
+        </xpath>
+
+
+
+    </template>
+
+
+
+    <record id="view_babylon_location_tags_tree" model="ir.ui.view">
+        <field name="name">stock.location.tags.tree</field>
+        <field name="model">stock.location.tags</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="babylon_view_location_form" model="ir.ui.view">
+        <field name="name">stock.location.form</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position='after'>
+                <!--                <label for="location_tag_ids"/>-->
+                <h2><field name="location_tag_ids"  widget="many2many_tags" placeholder="e.g. Ballet Bay" invisible="usage != 'internal'" options="{'no_create': True}"/></h2>
+
+                <!--                <field name="location_tag_ids"   groups="base.group_no_one" />-->
+            </xpath>
+
+
+
+        </field>
+    </record>
+
+    <record id="view_babylon_location_tags_form" model="ir.ui.view">
+        <field name="name">stock.location.tags.form</field>
+        <field name="model">stock.location.tags</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_babylon_location_tags_search" model="ir.ui.view">
+        <field name="name">stock.location.tags.search</field>
+        <field name="model">stock.location.tags</field>
+        <field name="arch" type="xml">
+            <search string="Search Tags">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+
+            </search>
+        </field>
+    </record>
+
+    <record id="action_babylon_location_tags" model="ir.actions.act_window">
+        <field name="name">Location Tags</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.location.tags</field>
+        <field name="search_view_id" ref="view_babylon_location_tags_search"/>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Location Tags
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="menu_location_tags"
+            name="Location Tags"
+            action="babylon_customization.action_babylon_location_tags"
+            parent="stock.menu_stock_config_settings"
+            sequence="2"/>
+
+
+
+</odoo>
+

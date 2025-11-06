@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_product_finished_good" model="ir.actions.act_window">
+            <field name="name">Finished Goods Product</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,list,form</field>
+            <!--            <field name="search_view_id" ref="product_template_search_form_view_stock"/>-->
+            <field name="domain">[('is_finished_goods','=',True)]</field>
+            <field name="context">{'default_is_finished_goods':True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Finished product found. Let's create one!
+                </p><p>
+                Track your stock quantities by creating finished products.
+            </p>
+            </field>
+        </record>
+
+
+
+        <record id="view_finished_goods_lot_tree" model="ir.ui.view">
+            <field name="name">stock.production.lot.tree</field>
+            <field name="model">stock.lot</field>
+            <field name="priority">11</field>
+            <field name="arch" type="xml">
+                <list string="Lots/Serial Numbers" multi_edit="1">
+                    <field name="name" decoration-bf="1"/>
+                    <field name="default_code" string="Sku" optional="show"/>
+                    <field name="product_id" string="Finished Goods" readonly="1"/>
+                    <field name="create_date" optional="show"/>
+                    <field name="location_id" string="Location" optional="show"/>
+                    <field name="product_qty" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="last_delivery_partner_id" optional="hide" string="Transfer to"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="lot_properties" optional="hide"/>
+                    <field name="product_qty" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_finished_production_lot_form" model="ir.ui.view">
+            <field name="name">stock.production.lot.form</field>
+            <field name="model">stock.lot</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form string="Lots/Serial Numbers">
+                    <sheet>
+                        <field name="company_id" invisible="1"/>
+                        <field name="display_complete" invisible="1"/>
+
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"
+                             invisible="not display_complete">
+                            <button class="oe_stat_button" name="action_lot_open_transfers"
+                                    type="object" icon="fa-truck" help="Transfers"
+                                    invisible="delivery_count == 0">
+                                <field name="delivery_count" widget="statinfo" string="Transfers"/>
+                            </button>
+                            <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" type="object">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Location</span>
+                                </div>
+                            </button>
+                            <button name="%(stock.action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Traceability</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" required="0" placeholder="e.g. LOT/0001/20121"/>
+                            </h1>
+                        </div>
+                        <group name="main_group">
+                            <group>
+                                <field name="product_id" string="Finished Goods" context="{'default_is_finished_goods':'True', 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Finished Goods this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
+                                <label for="product_qty"  invisible="not display_complete"/>
+                                <div class="o_row" invisible="not display_complete">
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                </div>
+                                <field name="default_code" string="Sku"/>
+<!--                                <field name="incl" string="INCI"/>-->
+                                <field name="purchase_qty"  string="Purchase Qty" />
+                                <field name="total_value"  string="Total Value" />
+                                <field name="avg_cost"  string="Average Cost" />
+                                <field name="standard_price"  string="Cost" />
+
+                                <field name="expiration_date" />
+<!--                                <field name="vmc_code" string="VMC code"/>-->
+<!--                                <field name="vendor_id" string="Vendor"/>-->
+<!--                                <field name="manufacture_id" readonly="0" string="Manufacturer" />-->
+<!--                                 <field name="customer_id" string="Customer"/>-->
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="location_id" invisible="not location_id" groups="stock.group_stock_manager"/>
+                                <field name="last_delivery_partner_id" invisible="not last_delivery_partner_id" groups="stock.group_stock_manager"/>
+                            </group>
+                            <group></group>
+                            <field name="lot_properties" nolabel="1" columns="2" hideAddButton="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+          <record id="action_finished_goods_lots" model="ir.actions.act_window">
+            <field name="name">Finished Goods Product  Lots</field>
+            <field name="type">ir.actions.act_window</field>
+
+            <field name="res_model">stock.lot</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_finished_goods_lot_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('babylon_customization.view_finished_production_lot_form')})]"/>
+            <field name="domain">[('is_finished_goods','=',True)]</field>
+            <field name="context">{'default_is_finished_goods':True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Finished Goods Product Lots
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+                id="menu_product_finished_goods"
+                name="Finished Goods"
+                action="action_product_finished_good"
+                parent="stock.menu_stock_inventory_control"
+                sequence="3"/>
+
+        <menuitem
+                id="menu_finished_goods_lots"
+                name="Finished Goods Lots"
+                action="action_finished_goods_lots"
+                parent="stock.menu_stock_inventory_control"
+                sequence="4"/>
+
+
+    </data>
+</odoo>
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="view_product_formula_tree" model="ir.ui.view">
+			<field name="name">product.formula.tree</field>
+			<field name="model">product.formula</field>
+			<field name="arch" type="xml">
+				<list>
+					<field name="name" string="Product Formula"/>
+				</list>
+			</field>
+		</record>
+		<record id="view_product_formula_form" model="ir.ui.view">
+			<field name="name">product.formula.form</field>
+			<field name="model">product.formula</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name" required="1" string="Product Formula"/>
+						</group>
+						<notebook>
+							<page string="Ingredients Line" name="ingredients_lines">
+								<field name="product_ingredients_line_ids" >
+									<list editable="bottom">
+										<field name="product_ingredient_id" string="Product Ingredients"/>
+										<field name="product_weight_percentage" widget="percentage" string="Weight Percentage"/>
+										<field name="product_composition" string="Product Composition"/>
+									</list>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+		<record id="action_product_formula" model="ir.actions.act_window">
+			<field name="name">Product Formula</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.formula</field>
+			<field name="view_mode">list,form</field>
+			<field name="context">{}</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_smiling_face">
+					Setup a New Product Formula
+				</p>
+			</field>
+		</record>
+
+		<menuitem
+				id="menu_product_formula"
+				name="Formula"
+				action="action_product_formula"
+				parent="stock.menu_stock_inventory_control"
+				sequence="3"/>
+
+	</data>
+</odoo>
+

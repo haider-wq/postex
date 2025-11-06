@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+
+access_product_formula,product_formula,model_product_formula,,1,1,1,1
+access_location_tags,location_tags,model_stock_location_tags,,1,1,1,1
+access_product_ingredients_line,product_ingredients_line,model_product_ingredients_line,,1,1,1,1
+
+access_product_components_line,product_components_line,model_product_components_line,,1,1,1,1
+
+
+
