@@ -13,7 +13,7 @@ import pytz
 from dateutil import parser
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 
 from odoo.tools import config, ormcache
 from odoo.tools.safe_eval import safe_eval
@@ -4937,13 +4937,4 @@ class SaleIntegration(models.Model):
 
         return record
 
-    def _save_log(self, vals):
-        try:
-            db_registry = registry(self.env.cr.dbname)
-            with db_registry.cursor() as new_cr:
-                new_env = api.Environment(new_cr, SUPERUSER_ID, {})
-                log = new_env['ir.logging'].create(vals)
-        except Exception as ex:
-            log = self.env['ir.logging']
-
-        return log
+   
