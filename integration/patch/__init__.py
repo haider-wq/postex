@@ -161,4 +161,4 @@ def load_patch(reg, cr, module):
 
 
 Registry.load = load_patch
-ModuleGraph.add_modules = add_modules_patch
+
