@@ -7,7 +7,7 @@ import odoo.tools as tools
 from odoo import models
 from odoo.modules.module_graph import ModuleGraph
 from odoo.modules.registry import Registry
-from odoo.modules.graph import _ignored_modules
+#from odoo.modules.module_graph import _ignored_modules
 from odoo.modules.module import load_openerp_module
 
 
@@ -71,8 +71,7 @@ def add_modules_patch(self, cr, module_list, force=None):
 
         if info and info['installable']:
             packages.append((module, info))  # TODO directly a dict, like in get_modules_with_version
-        elif module not in _ignored_modules(cr):
-            _logger.warning('module %s: not installable, skipped', module)
+        
 
     dependencies = dict([(p, info['depends']) for p, info in packages])
     current, later = set([p for p, info in packages]), set()
