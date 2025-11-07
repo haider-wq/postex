@@ -54,7 +54,7 @@ def is_module_installed(cr, module_name):
 
 # Save original methods
 Registry._original_load = Registry.load
-ModuleGraph._original_add_modules = ModuleGraph.add_modules
+
 
 
 def add_modules_patch(self, cr, module_list, force=None):
