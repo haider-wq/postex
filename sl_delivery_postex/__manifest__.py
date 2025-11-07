@@ -16,6 +16,7 @@
         "data/delivery_postex.xml",
         "views/delivery_courier.xml",
     ],
-    'installable': True,
-    'application': True,
+    "auto_install": False,
+    "installable": True,
+
 }
