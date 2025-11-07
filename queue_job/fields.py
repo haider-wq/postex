@@ -38,7 +38,7 @@ class JobSerialized(fields.Json):
         ),
     }
 
-    def __init__(self, string=fields.SENTINEL, base_type=fields.SENTINEL, **kwargs):
+    def __init__(self, string=None, base_type=None, **kwargs):
         super().__init__(string=string, _base_type=base_type, **kwargs)
 
     def _setup_attrs(self, model, name):  # pylint: disable=missing-return
