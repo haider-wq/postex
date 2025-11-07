@@ -17,7 +17,7 @@ try:
     else:
         queue_job_config = {}
 except ImportError:
-    queue_job_config = config.misc.get("queue_job", {})
+    queue_job_config = config.get("queue_job", {})
 
 
 from .runner import QueueJobRunner, _channels
