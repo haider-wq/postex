@@ -5,7 +5,7 @@ import odoo
 import odoo.tools as tools
 
 from odoo import models
-from odoo.modules.graph import Graph
+from odoo.modules.module_graph import Graph
 from odoo.modules.registry import Registry
 from odoo.modules.graph import _ignored_modules
 from odoo.modules.module import load_openerp_module
