@@ -1,7 +1,5 @@
 {
     'name': 'Odoo E-Commerce Connector Core',
-    'category': 'Sales',
-    'author': 'erptechnicals',
     'depends': [
         'web',
         'mrp',
