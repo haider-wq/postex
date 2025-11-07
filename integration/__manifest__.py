@@ -4,8 +4,7 @@
         'web',
         'mrp',
         'sale',
-        'stock_delivery',
-        'queue_job',
+        'stock_delivery'
     ],
     'data': [
         # Security
