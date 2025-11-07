@@ -834,7 +834,7 @@ class ProductTemplate(models.Model):
             for feature_line in self.feature_line_ids
         ]
 
-    @api.returns('self')
+    
     def copy(self, default=None):
         ctx = dict(skip_product_export=True)
         template = super(ProductTemplate, self.with_context(**ctx)).copy(default=default)
