@@ -5,7 +5,7 @@ import odoo
 import odoo.tools as tools
 
 from odoo import models
-from odoo.modules.module_graph import Graph
+from odoo.modules.module_graph import ModuleGraph
 from odoo.modules.registry import Registry
 from odoo.modules.graph import _ignored_modules
 from odoo.modules.module import load_openerp_module
@@ -54,7 +54,7 @@ def is_module_installed(cr, module_name):
 
 # Save original methods
 Registry._original_load = Registry.load
-Graph._original_add_modules = Graph.add_modules
+ModuleGraph._original_add_modules = ModuleGraph.add_modules
 
 
 def add_modules_patch(self, cr, module_list, force=None):
@@ -162,4 +162,4 @@ def load_patch(reg, cr, module):
 
 
 Registry.load = load_patch
-Graph.add_modules = add_modules_patch
+ModuleGraph.add_modules = add_modules_patch
